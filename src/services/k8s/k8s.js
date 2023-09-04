@@ -61,10 +61,31 @@ export class K8SService {
     if (response.stderr) {
       throw new Error(response.stderr);
     }
-    return response.stdout.split('|||').map((line) => {
-      const [name, startTime, status, namespace] = line.split('|--|');
+    return response.stdout
+      .split('|||')
+      .map((line) => {
+        const [name, startTime, status, namespace] = line.split('|--|');
 
-      return { name, startTime, status, namespace };
-    });
+        return { name, startTime, status, namespace };
+      })
+      .slice(0, -1);
+  }
+
+  async logs({ pod, container, namespace }) {
+    this.itsConnected();
+
+    let cmd = 'kubectl get logs ';
+
+    namespace = namespace ? ` -n ${namespace}` : ' -A';
+    const pods = pod ? [{ name: pod, namespace }] : await this.pods(namespace);
+    container = container ? `-c ${container}` : '--all-containers';
+
+    const logPromises = [];
+    for (const pod of pods) {
+      cmd += `pods/${pod.name} ${container} ${pod.namespace} --timestamp --ignore-errors`;
+      logPromises.push(this.#execService.run(cmd));
+    }
+
+    return Promise.allSettled(logPromises);
   }
 }

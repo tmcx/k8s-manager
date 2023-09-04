@@ -28,8 +28,13 @@ app.get('/namespaces', (_, res) => {
 });
 
 app.get('/pods', (req, res) => {
-  const namespace = req.query.namespace;
-  manageResponse(k8s.pods(namespace)).then((response) => {
+  manageResponse(k8s.pods(req.query)).then((response) => {
+    res.json(response);
+  });
+});
+
+app.get('/logs', (req, res) => {
+  manageResponse(k8s.pods(req.query)).then((response) => {
     res.json(response);
   });
 });
