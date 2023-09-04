@@ -54,13 +54,17 @@ export class K8SService {
 
     cmd += namespace ? ` -n ${namespace}` : ' -A';
 
-    const content = ' -o=jsonpath=\'{range .items[*]}{.metadata.name}{"\t"}{.status.phase}{"\n"}{end}\'';
+    const content = ` -o=jsonpath='{range .items[*]}{.metadata.name}{"|--|"}{.status.startTime}{"|--|"}{.status.phase}{"|||"}{end}'`;
 
     cmd += content;
     const response = await this.#execService.run(cmd);
     if (response.stderr) {
       throw new Error(response.stderr);
     }
-    return response.stdout.split(' ');
+    return response.stdout.split('|||').map((line) => {
+      const [name, startTime, status] = line.split('|--|');
+
+      return { name, startTime, status };
+    });
   }
 }
