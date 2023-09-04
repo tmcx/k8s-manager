@@ -6,6 +6,6 @@ export class ExecService {
 
   run(command, timeout = 10000) {
     console.log(command);
-    return this.#exec(command, { timeout });
+    return this.#exec(command, { timeout, maxBuffer: 1024 * 1024 * 10 });
   }
 }
