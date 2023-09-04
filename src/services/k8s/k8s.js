@@ -54,7 +54,7 @@ export class K8SService {
 
     cmd += namespace ? ` -n ${namespace}` : ' -A';
 
-    const content = ` -o=jsonpath='{range .items[*]}{.metadata.name}{"|--|"}{.status.startTime}{"|--|"}{.status.phase}{"|--|"}{.status.namespace}{"|||"}{end}'`;
+    const content = ` -o=jsonpath='{range .items[*]}{.metadata.name}{"|--|"}{.status.startTime}{"|--|"}{.status.phase}{"|--|"}{.metadata.namespace}{"|||"}{end}'`;
 
     cmd += content;
     const response = await this.#execService.run(cmd);
