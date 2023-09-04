@@ -34,7 +34,7 @@ app.get('/pods', (req, res) => {
 });
 
 app.get('/logs', (req, res) => {
-  manageResponse(k8s.pods(req.query)).then((response) => {
+  manageResponse(k8s.logs(req.query)).then((response) => {
     res.json(response);
   });
 });
