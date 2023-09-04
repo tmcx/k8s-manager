@@ -5,7 +5,7 @@ const app = express();
 
 const config = {
   port: '8088',
-  host: '0.0.0.0'
+  host: '0.0.0.0',
 };
 
 const k8s = new K8SService();
@@ -27,8 +27,9 @@ app.get('/namespaces', (_, res) => {
   });
 });
 
-app.get('/pods', (_, res) => {
-  manageResponse(k8s.pods()).then((response) => {
+app.get('/pods', (req, res) => {
+  const namespace = req.query.namespace;
+  manageResponse(k8s.pods(namespace)).then((response) => {
     res.json(response);
   });
 });

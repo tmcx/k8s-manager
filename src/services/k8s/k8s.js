@@ -54,7 +54,7 @@ export class K8SService {
 
     cmd += namespace ? ` -n ${namespace}` : ' -A';
 
-    const content = ` -o=jsonpath='{range .items[*]}{.metadata.name}{"|--|"}{.status.startTime}{"|--|"}{.status.phase}{"|||"}{end}'`;
+    const content = ` -o=jsonpath='{range .items[*]}{.metadata.name}{"|--|"}{.status.startTime}{"|--|"}{.status.phase}{"|--|"}{.status.namespace}{"|||"}{end}'`;
 
     cmd += content;
     const response = await this.#execService.run(cmd);
@@ -62,9 +62,9 @@ export class K8SService {
       throw new Error(response.stderr);
     }
     return response.stdout.split('|||').map((line) => {
-      const [name, startTime, status] = line.split('|--|');
+      const [name, startTime, status, namespace] = line.split('|--|');
 
-      return { name, startTime, status };
+      return { name, startTime, status, namespace };
     });
   }
 }
