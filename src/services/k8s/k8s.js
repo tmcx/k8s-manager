@@ -38,8 +38,7 @@ export class K8SService {
 
   async namespaces() {
     this.itsConnected();
-    const cmd =
-      'kubectl get namespaces -o=jsonpath="{.items[*][\'metadata.name\']}"';
+    const cmd = `kubectl get namespaces -o=jsonpath="{.items[*]['metadata.name']}"`;
     const response = await this.#execService.run(cmd);
     if (response.stderr) {
       throw new Error(response.stderr);
@@ -47,7 +46,7 @@ export class K8SService {
     return response.stdout.split(' ');
   }
 
-  async pods(namespace) {
+  async pods({ namespace }) {
     this.itsConnected();
 
     let cmd = 'kubectl get pods';
