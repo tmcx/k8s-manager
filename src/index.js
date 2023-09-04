@@ -12,8 +12,8 @@ const k8s = new K8SService();
 
 async function manageResponse(data) {
   try {
-    await data;
-    return { data };
+    const response = await data;
+    return { data: response };
   } catch (error) {
     if (error instanceof Error) {
       return { error: error.message };
@@ -23,6 +23,12 @@ async function manageResponse(data) {
 
 app.get('/namespaces', (_, res) => {
   manageResponse(k8s.namespaces()).then((response) => {
+    res.json(response);
+  });
+});
+
+app.get('/pods', (_, res) => {
+  manageResponse(k8s.pods()).then((response) => {
     res.json(response);
   });
 });
