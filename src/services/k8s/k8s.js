@@ -73,7 +73,7 @@ export class K8SService {
   async logs({ pod, container, namespace }) {
     this.itsConnected();
 
-    let cmd = 'kubectl get logs ';
+    let cmd = 'kubectl logs ';
 
     namespace = namespace ? ` -n ${namespace}` : ' -A';
     const pods = pod ? [{ name: pod, namespace }] : await this.pods(namespace);
@@ -81,7 +81,7 @@ export class K8SService {
 
     const logPromises = [];
     for (const pod of pods) {
-      cmd += `pods/${pod.name} ${container} ${pod.namespace} --timestamp --ignore-errors`;
+      cmd += `pods/${pod.name} ${pod.namespace} ${container} --timestamps --ignore-errors`;
       logPromises.push(this.#execService.run(cmd));
     }
 

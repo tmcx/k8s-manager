@@ -5,6 +5,7 @@ export class ExecService {
   #exec = promisify(exec);
 
   run(command, timeout = 10000) {
+    console.log(command);
     return this.#exec(command, { timeout });
   }
 }
