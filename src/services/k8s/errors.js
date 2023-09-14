@@ -5,3 +5,9 @@ export class ConnectionError extends K8SError {
     super('Could not connect to to k8s cluster');
   }
 }
+
+export class MissingParam extends Error {
+  constructor(param) {
+    super(`Missing param ${param}.`);
+  }
+}

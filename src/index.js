@@ -15,6 +15,7 @@ async function manageResponse(data) {
     const response = await data;
     return { data: response };
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       return { error: error.message };
     }
